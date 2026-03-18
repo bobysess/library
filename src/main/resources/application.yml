@@ -1,4 +1,6 @@
 spring: 
     application:
-        name: library            
+        name: library
+    liquibase:
+        change-log: classpath:db/changelog/db.changelog-master.yaml
     

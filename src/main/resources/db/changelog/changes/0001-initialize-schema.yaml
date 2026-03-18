@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0001-baseline-library-schema
+      author: github-copilot
+      comment: Baseline Liquibase changelog to initialize schema management.
+      changes:
+        - tagDatabase:
+            tag: v1.0.0-baseline
