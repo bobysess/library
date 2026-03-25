@@ -12,7 +12,7 @@
 	<artifactId>library</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>library</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Spring Boot App for Library Management</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -94,11 +94,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>jdbc</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
