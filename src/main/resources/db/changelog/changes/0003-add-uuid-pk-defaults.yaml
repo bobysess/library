@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0003-add-uuid-pk-defaults
+      author: bobysess
+      dbms: postgresql
+      comment: "Add gen_random_uuid() as default value for all UUID primary key columns so the DB auto-generates a UUID when id is null on insert"
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/0003-add-uuid-pk-defaults.sql
+            relativeToChangelogFile: false
+            splitStatements: true
+            stripComments: false
+      rollback:
+        - sql:
+            sql: |
+              ALTER TABLE author         ALTER COLUMN id DROP DEFAULT;
+              ALTER TABLE publisher      ALTER COLUMN id DROP DEFAULT;
+              ALTER TABLE category       ALTER COLUMN id DROP DEFAULT;
+              ALTER TABLE book           ALTER COLUMN id DROP DEFAULT;
+              ALTER TABLE inventory_copy ALTER COLUMN id DROP DEFAULT;
+              ALTER TABLE library_member ALTER COLUMN id DROP DEFAULT;
+              ALTER TABLE loan           ALTER COLUMN id DROP DEFAULT;
+              ALTER TABLE fine           ALTER COLUMN id DROP DEFAULT;
+              ALTER TABLE reservation    ALTER COLUMN id DROP DEFAULT;
