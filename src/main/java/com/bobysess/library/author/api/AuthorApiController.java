@@ -34,6 +34,19 @@ public class AuthorApiController {
         return authorMapper.toDto(author);
     }
 
+    @PostMapping("/man")
+    public List<AuthorDto> createAuthors(@RequestBody List<AuthorDto> authorsDtos) {
+        var authors = authorsDtos.stream()
+                .map(authorMapper::toDomain)
+                .toList();
+
+        authors = authorService.createAuthors(authors);
+
+        return authors.stream()
+                .map(authorMapper::toDto)
+                .toList();
+    }
+
     @PutMapping("/{id}")
     public AuthorDto updateAuthor(@PathVariable UUID id, @RequestBody AuthorDto authorDto) {
         var author = authorMapper.toDomain(authorDto);

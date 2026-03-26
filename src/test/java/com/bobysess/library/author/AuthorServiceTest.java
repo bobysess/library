@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,6 +45,31 @@ class AuthorServiceTest {
         // then
         assertThat(result).isEqualTo(saved);
         verify(authorRepository).save(any(Author.class));
+    }
+
+    @Test
+    void createAuthors_resetsIdsSavesAllAndReturnsAuthors() {
+        // given
+        Author first = new Author(UUID.randomUUID(), "Jane", "Austen", "English novelist",
+                LocalDate.of(1775, 12, 16), LocalDate.of(1817, 7, 18));
+        Author second = new Author(UUID.randomUUID(), "Mark", "Twain", "American author",
+                LocalDate.of(1835, 11, 30), LocalDate.of(1910, 4, 21));
+        List<Author> authors = List.of(first, second);
+        List<Author> saved = List.of(
+                new Author(UUID.randomUUID(), "Jane", "Austen", "English novelist",
+                        LocalDate.of(1775, 12, 16), LocalDate.of(1817, 7, 18)),
+                new Author(UUID.randomUUID(), "Mark", "Twain", "American author",
+                        LocalDate.of(1835, 11, 30), LocalDate.of(1910, 4, 21)));
+
+        when(authorRepository.saveAll(anyIterable())).thenReturn(saved);
+
+        // when
+        List<Author> result = sut.createAuthors(authors);
+
+        // then
+        assertThat(result).isEqualTo(saved);
+        assertThat(authors).allSatisfy(author -> assertThat(author.getId()).isNull());
+        verify(authorRepository).saveAll(authors);
     }
 
     @Test
