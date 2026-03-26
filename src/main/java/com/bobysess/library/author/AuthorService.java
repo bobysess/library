@@ -19,6 +19,14 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
+    public List<Author> createAuthors(List<Author> authors) {
+        authors.forEach(author -> {
+            author.setId(null);
+            validateAuthor(author);
+        });
+        return (List<Author>) authorRepository.saveAll(authors);
+    }
+
     public Author updateAuthor(Author author) {
         validateAuthor(author);
         return authorRepository.save(author);
