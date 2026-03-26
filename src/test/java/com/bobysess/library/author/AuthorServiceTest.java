@@ -28,7 +28,7 @@ class AuthorServiceTest {
     private AuthorRepository authorRepository;
 
     @InjectMocks
-    private AuthorService authorService;
+    private AuthorService sut;
 
     @Test
     void createAuthor_savesAndReturnsAuthor() {
@@ -39,7 +39,7 @@ class AuthorServiceTest {
         when(authorRepository.save(any(Author.class))).thenReturn(saved);
 
         // when
-        Author result = authorService.createAuthor("Jane", "Austen", "English novelist", birthDate, deathDate);
+        Author result = sut.createAuthor(new Author(null, "Jane", "Austen", "English novelist", birthDate, deathDate));
 
         // then
         assertThat(result).isEqualTo(saved);
@@ -54,7 +54,7 @@ class AuthorServiceTest {
         when(authorRepository.save(author)).thenReturn(author);
 
         // when
-        Author result = authorService.updateAuthor(author);
+        Author result = sut.updateAuthor(author);
 
         // then
         assertThat(result).isEqualTo(author);
@@ -69,7 +69,7 @@ class AuthorServiceTest {
         when(authorRepository.findByName("Hugo")).thenReturn(expected);
 
         // when
-        List<Author> result = authorService.findByName("Hugo");
+        List<Author> result = sut.findByName("Hugo");
 
         // then
         assertThat(result).isEqualTo(expected);
@@ -82,7 +82,7 @@ class AuthorServiceTest {
                 LocalDate.of(1828, 9, 9), LocalDate.of(1910, 11, 20));
 
         // no exception expected
-        assertDoesNotThrow(() -> authorService.updateAuthor(validAuthor));
+        assertDoesNotThrow(() -> sut.updateAuthor(validAuthor));
     }
 
     static Stream<Arguments> invalidAuthorCases() {
@@ -111,7 +111,7 @@ class AuthorServiceTest {
     @MethodSource("invalidAuthorCases")
     void validateAuthor_invalidCases_throwsInvalidAuthorException(
             Author author, InvalidAuthorException.Reason expectedReason) {
-        assertThatThrownBy(() -> authorService.updateAuthor(author))
+        assertThatThrownBy(() -> sut.updateAuthor(author))
                 .isInstanceOf(InvalidAuthorException.class)
                 .extracting(ex -> ((InvalidAuthorException) ex).getReason())
                 .isEqualTo(expectedReason);

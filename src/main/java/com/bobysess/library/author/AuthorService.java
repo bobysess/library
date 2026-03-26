@@ -13,9 +13,8 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
-    public Author createAuthor(String firstName, String lastName, String biography, LocalDate birthDate,
-            LocalDate deathDate) {
-        Author author = new Author(firstName, lastName, biography, birthDate, deathDate);
+    public Author createAuthor(Author author) {
+        author.setId(null);
         validateAuthor(author);
         return authorRepository.save(author);
     }
