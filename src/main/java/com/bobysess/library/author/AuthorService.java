@@ -19,21 +19,7 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-    public List<Author> createAuthors(List<Author> authors) {
-        authors.forEach(author -> {
-            author.setId(null);
-            validateAuthor(author);
-        });
-        return (List<Author>) authorRepository.saveAll(authors);
-    }
-
     public Author updateAuthor(Author author) {
-        if (author.getId() == null) {
-            throw new IllegalArgumentException("Author id must not be null when updating");
-        }
-        if (!authorRepository.existsById(author.getId())) {
-            throw new IllegalArgumentException("Author with id " + author.getId() + " does not exist");
-        }
         validateAuthor(author);
         return authorRepository.save(author);
     }
