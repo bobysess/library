@@ -34,7 +34,10 @@ public class Author {
         this.deathDate = deathDate;
     }
 
-    /** Creation constructor — leaves {@code id} null so the database generates it on insert. */
+    /**
+     * Creation constructor — leaves {@code id} null so the database generates it on
+     * insert.
+     */
     public Author(String firstName, String lastName, String biography, LocalDate birthDate, LocalDate deathDate) {
         this.firstName = firstName;
         this.lastName = lastName;
