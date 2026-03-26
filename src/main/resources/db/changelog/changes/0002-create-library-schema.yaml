@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002-create-library-schema
+      author: github-copilot
+      comment: Create the initial PostgreSQL schema for the library domain from SQL.
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/0002-create-library-schema.sql
+            relativeToChangelogFile: false
+            splitStatements: true
+            stripComments: false

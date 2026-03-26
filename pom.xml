@@ -12,7 +12,7 @@
 	<artifactId>library</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>library</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Spring Boot App for Library Management</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -28,7 +28,21 @@
 	</scm>
 	<properties>
 		<java.version>25</java.version>
+		<testcontainers.version>1.21.3</testcontainers.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -41,6 +55,14 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-liquibase</artifactId>
 		</dependency>
 
 		<dependency>
@@ -72,11 +94,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-testcontainers</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
