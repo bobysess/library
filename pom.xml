@@ -29,6 +29,9 @@
 	<properties>
 		<java.version>25</java.version>
 		<testcontainers.version>1.21.3</testcontainers.version>
+		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
+		<sonar.organization>bobysess</sonar.organization>
+		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencyManagement>
@@ -136,6 +139,11 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+        		<groupId>org.sonarsource.scanner.maven</groupId>
+        		<artifactId>sonar-maven-plugin</artifactId>
+        		<version>${sonar-maven-plugin.version}</version>
+      		</plugin>
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
