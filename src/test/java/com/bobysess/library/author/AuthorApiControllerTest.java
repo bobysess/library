@@ -131,6 +131,7 @@ class AuthorApiControllerTest {
                         ]
                         """.formatted(savedFirstId, savedSecondId));
 
+        @SuppressWarnings("unchecked")
         ArgumentCaptor<List<Author>> captor = ArgumentCaptor.forClass(List.class);
         verify(authorService).createAuthors(captor.capture());
         List<Author> capturedAuthors = captor.getValue();
