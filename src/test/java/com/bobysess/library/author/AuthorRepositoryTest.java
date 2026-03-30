@@ -33,7 +33,7 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    void findByLastnameContainingOrFirstnameContaining_matchesByLastname() {
+    void findByName_matchesByLastname() {
         List<Author> results = authorRepository
                 .findByName("hug");
 
@@ -42,7 +42,7 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    void findByLastnameContainingOrFirstnameContaining_matchesByFirstname() {
+    void findByName_matchesByFirstname() {
         List<Author> results = authorRepository
                 .findByName("vict");
 
@@ -51,7 +51,7 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    void findByLastnameContainingOrFirstnameContaining_matchesMultiple() {
+    void findByName_matchesMultiple() {
         List<Author> results = authorRepository.findByName("r");
 
         assertThat(results)
@@ -61,7 +61,7 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    void findByLastnameContainingOrFirstnameContaining_returnsEmpty_whenNoMatch() {
+    void findByName_returnsEmpty_whenNoMatch() {
         List<Author> results = authorRepository
                 .findByName("xyz");
 
