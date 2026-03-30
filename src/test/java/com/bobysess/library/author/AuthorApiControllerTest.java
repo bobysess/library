@@ -87,7 +87,7 @@ class AuthorApiControllerTest {
 
         when(authorService.createAuthors(any())).thenReturn(savedAuthors);
 
-        restTestClient.post().uri("/api/v1/authors/man")
+        restTestClient.post().uri("/api/v1/authors/bulk")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("""
                         [

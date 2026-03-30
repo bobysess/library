@@ -34,7 +34,7 @@ public class Author {
         this.deathDate = deathDate;
     }
 
-    /** Creation constructor — generates a new UUID and marks the entity as new. */
+    /** Creation constructor — leaves {@code id} null so the database generates it on insert. */
     public Author(String firstName, String lastName, String biography, LocalDate birthDate, LocalDate deathDate) {
         this.firstName = firstName;
         this.lastName = lastName;

@@ -33,7 +33,7 @@ public class AuthorApiController {
         return authorMapper.toDto(author);
     }
 
-    @PostMapping("/man")
+    @PostMapping("/bulk")
     public List<AuthorDto> createAuthors(@RequestBody List<AuthorDto> authorsDtos) {
         var authors = authorsDtos.stream()
                 .map(authorMapper::toDomain)
