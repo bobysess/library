@@ -29,7 +29,6 @@ public class AuthorApiController {
     @PostMapping
     public AuthorDto createAuthor(@RequestBody AuthorDto authorDto) {
         var author = authorMapper.toDomain(authorDto);
-        author.setId(null); // Ensure ID is null for creation
         author = authorService.createAuthor(author);
         return authorMapper.toDto(author);
     }
