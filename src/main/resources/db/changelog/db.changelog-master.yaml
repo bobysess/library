@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changes/0001-initialize-schema.yaml
   - include:
       file: db/changelog/changes/0002-create-library-schema.yaml
+  - include:
+      file: db/changelog/changes/0003-add-uuid-pk-defaults.yaml
