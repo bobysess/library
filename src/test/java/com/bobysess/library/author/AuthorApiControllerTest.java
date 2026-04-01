@@ -5,10 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.bobysess.library.author.api.AuthorApiController;
+import com.bobysess.library.author.api.AuthorMapper;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,38 +19,43 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
-import com.bobysess.library.author.api.AuthorApiController;
-import com.bobysess.library.author.api.AuthorMapper;
-
 @ExtendWith(MockitoExtension.class)
 class AuthorApiControllerTest {
 
-    @Mock
-    private AuthorService authorService;
+  @Mock private AuthorService authorService;
 
-    private final AuthorMapper authorMapper = new AuthorMapper();
+  private final AuthorMapper authorMapper = new AuthorMapper();
 
-    private AuthorApiController authorApiController;
+  private AuthorApiController authorApiController;
 
-    private RestTestClient restTestClient;
+  private RestTestClient restTestClient;
 
-    @BeforeEach
-    void setUp() {
-        authorApiController = new AuthorApiController(authorService, authorMapper);
-        restTestClient = RestTestClient.bindToController(authorApiController).build();
-    }
+  @BeforeEach
+  void setUp() {
+    authorApiController = new AuthorApiController(authorService, authorMapper);
+    restTestClient = RestTestClient.bindToController(authorApiController).build();
+  }
 
-    @Test
-    void createAuthor_savesAuthorAndReturnsDto() {
-        var savedId = UUID.randomUUID();
-        var savedAuthor = new Author(savedId, "Jane", "Austen", "English novelist.",
-                LocalDate.of(1775, 12, 16), LocalDate.of(1817, 7, 18));
+  @Test
+  void createAuthor_savesAuthorAndReturnsDto() {
+    var savedId = UUID.randomUUID();
+    var savedAuthor =
+        new Author(
+            savedId,
+            "Jane",
+            "Austen",
+            "English novelist.",
+            LocalDate.of(1775, 12, 16),
+            LocalDate.of(1817, 7, 18));
 
-        when(authorService.createAuthor(any(Author.class))).thenReturn(savedAuthor);
+    when(authorService.createAuthor(any(Author.class))).thenReturn(savedAuthor);
 
-        restTestClient.post().uri("/api/v1/authors")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("""
+    restTestClient
+        .post()
+        .uri("/api/v1/authors")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(
+            """
                         {
                             "firstName": "Jane",
                             "lastName": "Austen",
@@ -58,10 +64,12 @@ class AuthorApiControllerTest {
                             "deathDate": "1817-07-18"
                         }
                         """)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .json("""
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .json(
+            """
                         {
                             "id": "%s",
                             "firstName": "Jane",
@@ -70,26 +78,41 @@ class AuthorApiControllerTest {
                             "birthDate": "1775-12-16",
                             "deathDate": "1817-07-18"
                         }
-                        """.formatted(savedId));
+                        """
+                .formatted(savedId));
 
-        verify(authorService).createAuthor(any(Author.class));
-    }
+    verify(authorService).createAuthor(any(Author.class));
+  }
 
-    @Test
-    void createAuthors_savesAuthorsAndReturnsDtoList() {
-        var savedFirstId = UUID.randomUUID();
-        var savedSecondId = UUID.randomUUID();
-        var savedAuthors = List.of(
-                new Author(savedFirstId, "Jane", "Austen", "English novelist.",
-                        LocalDate.of(1775, 12, 16), LocalDate.of(1817, 7, 18)),
-                new Author(savedSecondId, "Mark", "Twain", "American writer.",
-                        LocalDate.of(1835, 11, 30), LocalDate.of(1910, 4, 21)));
+  @Test
+  void createAuthors_savesAuthorsAndReturnsDtoList() {
+    var savedFirstId = UUID.randomUUID();
+    var savedSecondId = UUID.randomUUID();
+    var savedAuthors =
+        List.of(
+            new Author(
+                savedFirstId,
+                "Jane",
+                "Austen",
+                "English novelist.",
+                LocalDate.of(1775, 12, 16),
+                LocalDate.of(1817, 7, 18)),
+            new Author(
+                savedSecondId,
+                "Mark",
+                "Twain",
+                "American writer.",
+                LocalDate.of(1835, 11, 30),
+                LocalDate.of(1910, 4, 21)));
 
-        when(authorService.createAuthors(any())).thenReturn(savedAuthors);
+    when(authorService.createAuthors(any())).thenReturn(savedAuthors);
 
-        restTestClient.post().uri("/api/v1/authors/bulk")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("""
+    restTestClient
+        .post()
+        .uri("/api/v1/authors/bulk")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(
+            """
                         [
                             {
                                 "firstName": "Jane",
@@ -107,10 +130,12 @@ class AuthorApiControllerTest {
                             }
                         ]
                         """)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .json("""
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .json(
+            """
                         [
                             {
                                 "id": "%s",
@@ -129,29 +154,39 @@ class AuthorApiControllerTest {
                                 "deathDate": "1910-04-21"
                             }
                         ]
-                        """.formatted(savedFirstId, savedSecondId));
+                        """
+                .formatted(savedFirstId, savedSecondId));
 
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<List<Author>> captor = ArgumentCaptor.forClass(List.class);
-        verify(authorService).createAuthors(captor.capture());
-        List<Author> capturedAuthors = captor.getValue();
-        assertThat(capturedAuthors)
-                .hasSize(2)
-                .extracting(Author::getFirstName)
-                .containsExactly("Jane", "Mark");
-    }
+    @SuppressWarnings("unchecked")
+    ArgumentCaptor<List<Author>> captor = ArgumentCaptor.forClass(List.class);
+    verify(authorService).createAuthors(captor.capture());
+    List<Author> capturedAuthors = captor.getValue();
+    assertThat(capturedAuthors)
+        .hasSize(2)
+        .extracting(Author::getFirstName)
+        .containsExactly("Jane", "Mark");
+  }
 
-    @Test
-    void updateAuthor_updatesAuthorAndReturnsDto() {
-        var id = UUID.randomUUID();
-        var updatedAuthor = new Author(id, "Charles", "Dickens", "Victorian author.",
-                LocalDate.of(1812, 2, 7), LocalDate.of(1870, 6, 9));
+  @Test
+  void updateAuthor_updatesAuthorAndReturnsDto() {
+    var id = UUID.randomUUID();
+    var updatedAuthor =
+        new Author(
+            id,
+            "Charles",
+            "Dickens",
+            "Victorian author.",
+            LocalDate.of(1812, 2, 7),
+            LocalDate.of(1870, 6, 9));
 
-        when(authorService.updateAuthor(any(Author.class))).thenReturn(updatedAuthor);
+    when(authorService.updateAuthor(any(Author.class))).thenReturn(updatedAuthor);
 
-        restTestClient.put().uri("/api/v1/authors/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("""
+    restTestClient
+        .put()
+        .uri("/api/v1/authors/{id}", id)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(
+            """
                         {
                             "firstName": "Charles",
                             "lastName": "Dickens",
@@ -160,10 +195,12 @@ class AuthorApiControllerTest {
                             "deathDate": "1870-06-09"
                         }
                         """)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .json("""
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .json(
+            """
                         {
                             "id": "%s",
                             "firstName": "Charles",
@@ -172,23 +209,34 @@ class AuthorApiControllerTest {
                             "birthDate": "1812-02-07",
                             "deathDate": "1870-06-09"
                         }
-                        """.formatted(id));
+                        """
+                .formatted(id));
 
-        verify(authorService).updateAuthor(any(Author.class));
-    }
+    verify(authorService).updateAuthor(any(Author.class));
+  }
 
-    @Test
-    void findByName_returnsListOfMatchingAuthors() {
-        var author = new Author(UUID.randomUUID(), "Mark", "Twain", "American writer.",
-                LocalDate.of(1835, 11, 30), LocalDate.of(1910, 4, 21));
+  @Test
+  void findByName_returnsListOfMatchingAuthors() {
+    var author =
+        new Author(
+            UUID.randomUUID(),
+            "Mark",
+            "Twain",
+            "American writer.",
+            LocalDate.of(1835, 11, 30),
+            LocalDate.of(1910, 4, 21));
 
-        when(authorService.findByName("Twain")).thenReturn(List.of(author));
+    when(authorService.findByName("Twain")).thenReturn(List.of(author));
 
-        restTestClient.get().uri("/api/v1/authors/search?name=Twain")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .json("""
+    restTestClient
+        .get()
+        .uri("/api/v1/authors/search?name=Twain")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .json(
+            """
                         [
                             {
                                 "id": "%s",
@@ -199,21 +247,25 @@ class AuthorApiControllerTest {
                                 "deathDate": "1910-04-21"
                             }
                         ]
-                        """.formatted(author.getId()));
+                        """
+                .formatted(author.getId()));
 
-        verify(authorService).findByName("Twain");
-    }
+    verify(authorService).findByName("Twain");
+  }
 
-    @Test
-    void createAuthor_whenInvalidAuthorExceptionThrown_returnsApiErrorDto() {
-        when(authorService.createAuthor(any(Author.class)))
-                .thenThrow(new InvalidAuthorException(
-                        InvalidAuthorException.Reason.MISSING_FIRST_NAME,
-                        "First name is required"));
+  @Test
+  void createAuthor_whenInvalidAuthorExceptionThrown_returnsApiErrorDto() {
+    when(authorService.createAuthor(any(Author.class)))
+        .thenThrow(
+            new InvalidAuthorException(
+                InvalidAuthorException.Reason.MISSING_FIRST_NAME, "First name is required"));
 
-        restTestClient.post().uri("/api/v1/authors")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("""
+    restTestClient
+        .post()
+        .uri("/api/v1/authors")
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(
+            """
                         {
                             "firstName": "",
                             "lastName": "Austen",
@@ -222,15 +274,16 @@ class AuthorApiControllerTest {
                             "deathDate": "1817-07-18"
                         }
                         """)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody()
-                .json("""
+        .exchange()
+        .expectStatus()
+        .isBadRequest()
+        .expectBody()
+        .json(
+            """
                         {
                             "code": "MISSING_FIRST_NAME",
                             "message": "First name is required"
                         }
                         """);
-    }
-
+  }
 }

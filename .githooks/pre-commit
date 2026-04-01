@@ -1,0 +1,15 @@
+#!/bin/sh
+# Run Spotless to auto-format Java sources before committing.
+# Any files reformatted are re-staged so the commit includes clean code.
+
+set -e
+
+cd "$(git rev-parse --show-toplevel)"
+
+echo "[pre-commit] Running spotless:apply..."
+./mvnw --quiet spotless:apply
+
+# Re-stage any files that Spotless reformatted
+git add -u
+
+echo "[pre-commit] Code is formatted."
