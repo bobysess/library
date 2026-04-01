@@ -204,4 +204,33 @@ class AuthorApiControllerTest {
         verify(authorService).findByName("Twain");
     }
 
+    @Test
+    void createAuthor_whenInvalidAuthorExceptionThrown_returnsApiErrorDto() {
+        when(authorService.createAuthor(any(Author.class)))
+                .thenThrow(new InvalidAuthorException(
+                        InvalidAuthorException.Reason.MISSING_FIRST_NAME,
+                        "First name is required"));
+
+        restTestClient.post().uri("/api/v1/authors")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("""
+                        {
+                            "firstName": "",
+                            "lastName": "Austen",
+                            "biography": "English novelist.",
+                            "birthDate": "1775-12-16",
+                            "deathDate": "1817-07-18"
+                        }
+                        """)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .json("""
+                        {
+                            "code": "MISSING_FIRST_NAME",
+                            "message": "First name is required"
+                        }
+                        """);
+    }
+
 }

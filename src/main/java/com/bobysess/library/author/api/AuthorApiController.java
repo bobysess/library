@@ -3,6 +3,8 @@ package com.bobysess.library.author.api;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bobysess.library.author.AuthorService;
+import com.bobysess.library.author.InvalidAuthorException;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -59,5 +63,10 @@ public class AuthorApiController {
         return authorService.findByName(name).stream()
                 .map(authorMapper::toDto)
                 .toList();
+    }
+
+    @ExceptionHandler(InvalidAuthorException.class)
+    public ResponseEntity<ApiErrorDto> handleInvalidAuthorException(InvalidAuthorException ex) {
+        return ResponseEntity.badRequest().body(new ApiErrorDto(ex.getReason().name(), ex.getMessage()));
     }
 }
