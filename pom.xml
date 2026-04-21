@@ -29,7 +29,7 @@
 	<properties>
 		<java.version>25</java.version>
 		<jacoco.version>0.8.14</jacoco.version>
-		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
+		<sonar-maven-plugin.version>5.6.0.6792</sonar-maven-plugin.version>
 		<spotless.version>3.4.0</spotless.version>
 		<google-java-format.version>1.35.0</google-java-format.version>
 		<sonar.organization>bobysess</sonar.organization>
